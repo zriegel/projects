@@ -1,0 +1,17 @@
+drop table sts_pre_table_store_total;
+create table sts_pre_table_store_total as
+select customer_eid,
+sales_instance_id,
+sum (net_sales_amt) sales,
+SUM (NET_MARGIN_AMT) MARGIN,
+SUM (NET_SALES_QTY) UNITS,
+day_dt,
+FISCAL_WK
+from cidb_prd..SALES_TRANS_SKU_USD_VW A
+where fiscal_wk between 201801 and 201914
+AND SALES_CUSTOMER_LINK_EXCL_TYPE_ID = 0
+group by customer_eid,
+sales_instance_id,
+day_dt,
+FISCAL_WK
+DISTRIBUTE ON (CUSTOMER_EID);
